@@ -1,4 +1,4 @@
-700848098cffee7811cb013670877482 *DESCRIPTION
+fc90451464fd6bff3595cca2d96d457a *DESCRIPTION
 a2a8d6265887f2ae5176f41b9d5068c7 *NAMESPACE
 b1420d25839d6f335815e1773ccb8e58 *R/SUNGEO.R
 5e3c44090139d719d3c9a5b634670f3a *R/data.R
@@ -8,13 +8,13 @@ c6cad8599e28dcb5f404f7156bad661c *R/fix_geom.R
 99d9fbc769bf6b7c01afe056c1bd5fc7 *R/geocode_osm_batch.R
 5bde8ff04f91429af6f6b9b4ba4b687e *R/hot_spot.R
 66f3f4459c851eb09b1e0576a96ae54b *R/line2poly.R
-ad4e07497f6f2a2186e762e93192e7e7 *R/point2poly_simp.R
+aa2874526b8bfe64430a39c5a8dfb251 *R/point2poly_simp.R
 522da3141fffe110606751471571b9d9 *R/point2poly_tess.R
 1be61989ee79c9925469100aaece5969 *R/poly2poly_ap.R
 323fb7c6ff57e2347ee2584e2dcb6b31 *R/sf2raster.R
 7fd456a283857ac7dab9d61cf42df5a2 *R/utils.R
 6ec5e51a8a583913270f10d254bc8045 *R/utm_select.R
-18739f5d7a9169cc5ceaa05996e5ff97 *README.md
+fcd66463cb75c5fb916def75dd8d8f36 *README.md
 2971ca98a56115b858fbdd4adf45411e *data/clea_deu2009.rda
 f198a5489992eac42ef37c041d60f617 *data/clea_deu2009_df.rda
 ee35dfa8abb9af70bc8af411ad2c5f8a *data/clea_deu2009_pt.rda
@@ -34,7 +34,7 @@ af9bfc38cf3c8d32568a90cc33634efa *man/geocode_osm_batch.Rd
 4b63ff269bb485947722a4c450bca379 *man/highways_deu1992.Rd
 22df67a59d9987a41a106470e7dc590d *man/hot_spot.Rd
 d22177f1adb15323fc0320f126650109 *man/line2poly.Rd
-566b2788496fbd3ad60815ed0978b90f *man/point2poly_simp.Rd
+4930f8aab8b465b19e68805988cea2a6 *man/point2poly_simp.Rd
 ee52636f98ec03f6f2e4d501569d409e *man/point2poly_tess.Rd
 2a3443bb8da1b08acd1c7043e2da343d *man/poly2poly_ap.Rd
 e68ca2e8a3fa7118206b23a2a15ed9f6 *man/sf2raster.Rd
