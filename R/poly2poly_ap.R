@@ -138,7 +138,7 @@ poly2poly_ap <- function(
   if("pw"%in%methodz & length(pop_raster)==0){stop("No population raster provided.")}
 
   # Area-weights (part 1)
-  if("aw"%in%methodz){
+  if("aw"%in%methodz|"aw"%in%char_methodz){
     # Calculate polygon areas
     poly_from$AREA_TOTAL <- as.numeric(sf::st_area(poly_from))
   }
@@ -174,7 +174,7 @@ poly2poly_ap <- function(
   #Part iii -
   #############################
   # Area-weights (part 2)
-  if("aw"%in%methodz){
+  if("aw"%in%methodz|"aw"%in%char_methodz){
     # Calculate weights
     int_1$AREA_INT <- as.numeric(sf::st_area(int_1))
     int_1$AREA_W <- int_1$AREA_INT/int_1$AREA_TOTAL
@@ -524,7 +524,7 @@ poly2poly_ap <- function(
     #Part d -
     searchWeight <- c('weighted', 'w')
 
-    if(grepl(paste(searchWeight, collapse = '|'), attributes(IntermediateFunction)$srcref)){
+    if(grepl(paste(searchWeight, collapse = '|'), paste(as.character(attributes(IntermediateFunction)$srcref),collapse=""))){
       if("aw"%in%Numeric_Subset$methodz[sub_iter]){
         Output <- by(data=Internal_Matrix,INDICES=Internal_Matrix$Return_ID,FUN=function(x){IntermediateFunction(x$var_, w = x$AREA_W)},simplify=TRUE)
         Output <- data.table::data.table(Return_ID=as.numeric(names(Output)),V1=c(Output))

@@ -134,10 +134,11 @@ point2poly_tess <- function(
   #Part 1 - Create union layer
   ###########################
   suppressWarnings({
-    # polyz_u <- dplyr::select(fix_geom(rmapshaper::ms_dissolve(polyz)),-1)
-    polyz_u <- fix_geom(sf::st_union(polyz))
+    suppressMessages({
+      # polyz_u <- dplyr::select(fix_geom(rmapshaper::ms_dissolve(polyz)),-1)
+      polyz_u <- fix_geom(sf::st_union(polyz))
+    })
   })
-
 
   #####################################
   #Part 2 -  Jitter and crop by polygon
@@ -182,14 +183,13 @@ point2poly_tess <- function(
   ###############################################
   #Part 5 - Exception for single-point geometries
   ###############################################
-  if(nrow(pointz_crop)==1){
+  if(nrow(pointz_crop)==1 | length(unique(st_geometry(pointz_crop)))==1){
     suppressWarnings({
-      geo_vor <- suppressMessages(
-         data.table::setnames(sf::st_intersection(sf::st_as_sf(sf::st_geometry(polyz_u)),polyz_u$geometry),"x","geometry")
-      )
+      suppressMessages({
+        geo_vor <- sf::st_as_sf(data.frame(x=NA,geometry=sf::st_geometry(polyz_u)))
+      })
     })
   }
-  sf::st_geometry(geo_vor) <- "geometry"
 
   #
   #

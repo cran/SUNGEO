@@ -5,6 +5,7 @@
 #' @param pointz Source points layer. \code{sf} object.
 #' @param polyz Destination polygon layer. Must have identical CRS to \code{pointz}. \code{sf} object.
 #' @param varz Names of variable(s) to be assigned from source polygon layer to destination polygons. Character string or vector of character strings.
+#' @param char_varz Names of character string variable(s) in \code{varz}. Character string or vector of character strings.
 #' @param funz Aggregation function to be applied to variables specified in \code{varz}. Must take as an input a vector \code{x}. Function or list of functions.
 #' @param na_val Value to be assigned to missing values. Defaul is \code{NA}. Logical or list.
 #' @param drop_na_cols Drop columns with completely missing values. Defaul is \code{FALSE}. Logical.
@@ -55,6 +56,7 @@
 point2poly_simp <- function(pointz,
                             polyz,
                             varz,
+                            char_varz=NULL,
                             funz=list(function(x){sum(x,na.rm=TRUE)}),
                             na_val=NA,
                             drop_na_cols=FALSE){
@@ -215,8 +217,9 @@ point2poly_simp <- function(pointz,
   #Part iv -
   sf::st_geometry(polyz_) <- Coordinates
 
-  # Ensure classes are same as in source file
+  # Ensure classes are same as in source file (+ coerce char_varz to character)
   classez <- sapply(as.data.frame(pointz,stringsAsFactors=FALSE)[,unique(unlist(varz))],class)
+  if(length(char_varz)>0){classez[names(classez)%in%char_varz] <- "character"}
   polyz_ng <- sf::st_drop_geometry(polyz_)
   for(cl0 in 1:length(classez)){polyz_ng[,names(classez[cl0])] <- methods::as(polyz_ng[,names(classez[cl0])],classez[cl0])}
   polyz_ <- sf::st_set_geometry(polyz_ng,polyz_$geometry); rm(polyz_ng)
