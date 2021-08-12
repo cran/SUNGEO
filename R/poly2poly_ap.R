@@ -11,6 +11,7 @@
 #' @param pop_raster Population raster to be used for population weighting, Must be supplied if \code{methodz="pw"}. Must have identical CRS to \code{poly_from}. \code{raster} object.
 #' @param varz Names of numeric variable(s) to be interpolated from source polygon layer to destination polygons. Character string or vector of character strings.
 #' @param funz Aggregation function to be applied to variables specified in \code{varz}. Must take as an input a numeric vector \code{x} and vector of weights \code{w}. Function or list of functions.
+#' @param pycno_varz  Names of spatially extensive numeric variables for which the pycnophylactic (mass-preserving) property should be preserved. Character string or vector of character strings.
 #' @param char_varz  Names of character string variables to be interpolated from source polygon layer to destination polygons. Character string or vector of character strings.
 #' @param char_assign Assignment rule to be used for variables specified in \code{char_varz}. Could be either "biggest_overlap" (default) or "all_overlap". See "details". Character string or vector of character strings.
 #' @param seed Seed for generation of random numbers. Default is 1. Numeric.
@@ -60,6 +61,7 @@
 #'               varz = list(
 #'                 c("to1","pvs1_margin"),
 #'                 c("vv1") ),
+#'               pycno_varz = "vv1",
 #'               funz = list(
 #'                 function(x,w){stats::weighted.mean(x,w)},
 #'                 function(x,w){sum(x*w)} ),
@@ -90,6 +92,7 @@
 #' @export
 
 
+
 poly2poly_ap <- function(
   poly_from,
   poly_to,
@@ -99,6 +102,7 @@ poly2poly_ap <- function(
   char_methodz = "aw",
   pop_raster=NULL,
   varz=NULL,
+  pycno_varz=NULL,
   char_varz=NULL,
   char_assign="biggest_overlap",
   funz=function(x,w){stats::weighted.mean(x,w,na.rm=TRUE)},
@@ -166,6 +170,10 @@ poly2poly_ap <- function(
       sf::st_buffer(sf::st_intersection(sf::st_buffer(poly_from,dist=0),sf::st_buffer(poly_to,dist=0)),dist=0)
     )
   })
+
+  # Drop empty geometries
+  if(any(sf::st_is_empty(int_1))){int_1 <- int_1[!sf::st_is_empty(int_1),]}
+
 
   #
   #
@@ -572,7 +580,26 @@ poly2poly_ap <- function(
   #
 
   ###########################################################
-  #Section E - Numeric Variables
+  #Section E - Pycnophylactic variables
+  ###########################################################
+
+  if(!is.null(pycno_varz)){
+    # Loop over pycno_varz
+    for(p0 in 1:length(pycno_varz)){
+      # Find sum of original variable
+      sum_from <- data.table::as.data.table(poly_from)[,sum(get(pycno_varz[p0]),na.rm=TRUE)]
+      # Find matching processed variables in target geometry
+      pycno_varz_to <- grep(paste0("^",pycno_varz[p0]),Numeric_Subset[,paste0(Numeric_Subset$Varz,"_",Numeric_Subset$methodz)],value=TRUE)
+      # Rescale variables in target geometry
+      for(p00 in 1:length(pycno_varz_to)){
+        Numeric_Aggregation_Matrix[,eval(pycno_varz_to[p00]) := get(pycno_varz_to[p00])*sum_from/sum(get(pycno_varz_to[p00]),na.rm = TRUE)]
+      }
+    }
+  }
+
+
+  ###########################################################
+  #Section F - Combine
   ###########################################################
   if(any(ClassTypes_Variables$Character)){
     #Part 1 -
