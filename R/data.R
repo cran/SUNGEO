@@ -22,7 +22,7 @@
 #'   \item{incumb_pty_n }{Incumbent party name.}
 #'   \item{win1_pty_n }{Party name of popular vote share winner in first round. Character.}
 #' }
-#' @source Constituency-Level Elections Archive (CLEA) \url{http://www.electiondataarchive.org/}
+#' @source Constituency-Level Elections Archive (CLEA) \url{https://electiondataarchive.org/}
 "clea_deu2009"
 
 #' Constituency level results for lower chamber legislative elections, Germany 2009.
@@ -49,7 +49,7 @@
 #'   \item{incumb_pty_n }{Incumbent party name.}
 #'   \item{win1_pty_n }{Party name of popular vote share winner in first round. Character.}
 #' }
-#' @source Constituency-Level Elections Archive (CLEA) \url{http://www.electiondataarchive.org/}
+#' @source Constituency-Level Elections Archive (CLEA) \url{https://electiondataarchive.org/}
 "clea_deu2009_pt"
 
 #' Constituency level results for lower chamber legislative elections, Germany 2009.
@@ -73,7 +73,7 @@
 #'   \item{longitude }{Longitude of constituency centroid. Numeric.}
 #'   \item{latitude }{Latitude of constituency centroid. Numeric.}
 #' }
-#' @source Constituency-Level Elections Archive (CLEA) \url{http://www.electiondataarchive.org/}
+#' @source Constituency-Level Elections Archive (CLEA) \url{https://electiondataarchive.org/}
 "clea_deu2009_df"
 
 #' Population count raster for Germany, 2010.
@@ -90,7 +90,7 @@
 #' data source : in memory.
 #' names       : gpw_v4_population_count_rev11_2010_2pt5_min.
 #' values      : 0, 92915.66  (min, max).
-#' @source Gridded Population of the World (GPW) v4: Population Count, v4.11 \url{https://sedac.ciesin.columbia.edu/data/set/gpw-v4-population-count-rev11}
+#' @source Gridded Population of the World (GPW) v4: Population Count, v4.11 <doi:10.7927/H4JW8BX5>.
 "gpw4_deu2010"
 
 #' Hexagonal grid for Germany.
@@ -129,5 +129,5 @@
 #'   \item{ISO }{ISO 3166-1 alpha-3 country code. Character string.}
 #'   \item{ISOCOUNTRY }{Country name. Character string.}
 #' }
-#' @source Defense Mapping Agency (DMA), 1992. Digital Chart of the World. Defense Mapping Agency, Fairfax, Virginia. (Four CD-ROMs). Available through DIVA-GIS: \url{http://www.diva-gis.org/gData} (accessed April 15, 2020).
+#' @source Defense Mapping Agency (DMA), 1992. Digital Chart of the World. Defense Mapping Agency, Fairfax, Virginia. (Four CD-ROMs). Available through DIVA-GIS: \url{http://www.diva-gis.org/gData} (accessed August 12, 2021).
 "highways_deu1992"
