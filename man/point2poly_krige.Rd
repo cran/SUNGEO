@@ -10,7 +10,11 @@ point2poly_krige(
   rasterz = NULL,
   yvarz = NULL,
   xvarz = NULL,
-  funz = base::sum,
+  pycno_yvarz = NULL,
+  funz = base::mean,
+  use_grid = TRUE,
+  nz_grid = 100,
+  blockz = 0,
   pointz_x_coord = NULL,
   pointz_y_coord = NULL,
   polyz_x_coord = NULL,
@@ -29,7 +33,15 @@ point2poly_krige(
 
 \item{xvarz}{Names of numeric variable(s) for universal Kriging, in which yvarz is linearly dependent. Character string or vector of character strings.}
 
-\item{funz}{Aggregation function to be applied to values in \code{rasterz}. Must take as an input a vector \code{x}. Default is sum.  Function.}
+\item{pycno_yvarz}{Names of spatially extensive numeric variables for which the pycnophylactic (mass-preserving) property should be preserved. Must be a subset of \code{yvarz}. Character string or vector of character strings.}
+
+\item{funz}{Aggregation function to be applied to values in \code{rasterz} and to interpolated values. Must take as an input a vector \code{x}. Default is mean.  Function.}
+
+\item{use_grid}{Use regular grid as destination layer for interpolation, before aggregating to polygons? Default is TRUE.}
+
+\item{nz_grid}{Number of grid cells in x and y direction (columns, rows). Integer of length 1 or 2. Default is 100. Ignored if use_grid=FALSE.}
+
+\item{blockz}{Size of blocks used for Block Kriging, in meters. Integer of length 1 or 2. Default is 0.}
 
 \item{pointz_x_coord}{Name of numeric variable corresponding to a measure of longitude (Easting) in a data frame object for \code{pointz}. Character string.}
 
@@ -87,5 +99,18 @@ out_3 <- point2poly_krige(pointz = clea_deu2009_pt,
 par(mfrow=c(1,2))
 plot(clea_deu2009["to1"], key.pos = NULL, reset = FALSE)
 plot(out_3["to1.pred"], key.pos = NULL, reset = FALSE)
+}
+
+# Block Kriging with block size of 100 km
+\dontrun{
+data(clea_deu2009)
+data(clea_deu2009_pt)
+out_4 <- point2poly_krige(pointz = clea_deu2009_pt,
+                         polyz = clea_deu2009,
+                         yvarz = "to1",
+                         blockz = 100000)
+par(mfrow=c(1,2))
+plot(clea_deu2009["to1"], key.pos = NULL, reset = FALSE)
+plot(out_4["to1.pred"], key.pos = NULL, reset = FALSE)
 }
 }
