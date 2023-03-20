@@ -1,8 +1,8 @@
 Package: SUNGEO
 Type: Package
 Title: Sub-National Geospatial Data Archive: Geoprocessing Toolkit
-Version: 0.2.292
-Date: 2022-08-18
+Version: 1.1.1
+Date: 2023-03-20
 Author: Jason Byers, Marty Davidson, Yuri M. Zhukov
 Maintainer: Yuri M. Zhukov <zhukov@umich.edu>
 Description: Tools for integrating spatially-misaligned GIS datasets. Part of the Sub-National Geospatial Data Archive System.
@@ -12,9 +12,9 @@ Encoding: UTF-8
 LazyData: TRUE
 Depends: R (>= 2.10)
 Imports:
-        sf,data.table,dplyr,RCurl,jsonlite,raster,stats,methods,purrr,measurements,RANN,cartogram,fasterize,packcircles,rmapshaper,sp,spdep,Rcpp,httr,rlang,automap
-RoxygenNote: 7.1.1
+        sf,data.table,dplyr,RCurl,jsonlite,terra,raster,stringr,stats,methods,purrr,measurements,RANN,cartogram,packcircles,rmapshaper,sp,spdep,Rcpp,httr,rlang,automap
+RoxygenNote: 7.2.3
 NeedsCompilation: no
-Packaged: 2022-08-18 13:52:53 UTC; zhukov
+Packaged: 2023-03-20 21:46:36 UTC; zhukov
 Repository: CRAN
-Date/Publication: 2022-08-18 14:20:02 UTC
+Date/Publication: 2023-03-20 22:10:02 UTC
