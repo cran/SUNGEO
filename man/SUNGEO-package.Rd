@@ -5,13 +5,24 @@
 \alias{SUNGEO-package}
 \title{SUNGEO: Sub-National Geospatial Data Archive: Geoprocessing Toolkit}
 \description{
-Tools for integrating spatially-misaligned GIS datasets. Part of the Sub-National Geospatial Data Archive System.
+Integrates spatially-misaligned GIS datasets across incompatible geographic units. Part of the Sub-National Geospatial Data Archive System. For the underlying methods, see Zhukov, Byers, Davidson, and Kollman (2024) "Integrating Data Across Misaligned Spatial Units," Political Analysis, Volume 32, Number 1, pp. 17-33 \doi{10.1017/pan.2023.5}.
 }
 \seealso{
 Useful links:
 \itemize{
   \item \url{https://www.sungeo.org/}
   \item \url{https://github.com/zhukovyuri/SUNGEO}
+}
+
+}
+\author{
+\strong{Maintainer}: Yuri M. Zhukov \email{ymz2@georgetown.edu}
+
+Authors:
+\itemize{
+  \item Yuri M. Zhukov \email{ymz2@georgetown.edu}
+  \item Jason Byers
+  \item Marty Davidson
 }
 
 }

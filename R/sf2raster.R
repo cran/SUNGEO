@@ -33,37 +33,35 @@
 ##' If \code{reverse=TRUE}, returns an \code{sf} polygon layer, with columns corresponding to \code{input_variable} and auto-generated numerical ID \code{Field}.
 #' @import packcircles cartogram Rcpp
 #' @importFrom terra rasterize ncell res ext vect as.data.frame res extract values mask plot
-#' @importFrom raster raster
 #' @importFrom cartogram cartogram_cont
 #' @importFrom sf st_collection_extract st_crs st_geometry st_centroid st_buffer st_transform st_convex_hull st_union
 #' @importFrom dplyr group_by summarize left_join
 #' @importFrom purrr reduce
 #' @examples
 #' # Rasterization of polygon layer.
-#' \dontrun{
 #' data(clea_deu2009)
 #' out_1 <- sf2raster(polyz_from = utm_select(clea_deu2009),
 #'                    input_variable = "to1")
 #' terra::plot(out_1)
-#' }
+#'
+#' \donttest{
 #' # Rasterization of point layer
-#' \dontrun{
 #' data(clea_deu2009_pt)
 #' out_2 <- sf2raster(pointz_from = utm_select(clea_deu2009_pt),
 #'                    input_variable = "to1",
 #'                    grid_dim = c(25,25))
 #' terra::plot(out_2)
 #' }
+#' \donttest{
 #' # Cartogram (vote turnout scaled by number of valid votes)
-#' \dontrun{
 #' out_3 <- sf2raster(polyz_from = utm_select(clea_deu2009),
 #'                    input_variable = "to1",
 #'                    cartogram = TRUE,
 #'                    carto_var = "vv1")
 #' terra::plot(out_3)
 #' }
+#' \donttest{
 #' # Polygonization of cartogram raster
-#' \dontrun{
 #' out_4a <- sf2raster(polyz_from = utm_select(clea_deu2009),
 #'                     input_variable = "to1",
 #'                     cartogram = TRUE,

@@ -1,8 +1,8 @@
 #' Automatically calculate Local G hot spot intensity
 #'
-#' Function automatically calculates the Local G hot spot intensity measure for spatial points, spatial polygons, and single raster layers. Uses RANN for efficient nearest neighbor calculation (spatial points and single raster layers only); users can specify the number of neighbors (k). Users can specify the neighborhood style (see spdep::nb2listw) with default being standardized weight matrix (W).
+#' Function automatically calculates the Local G hot spot intensity measure for spatial points or spatial polygons. Uses RANN for efficient nearest neighbor calculation (spatial points only); users can specify the number of neighbors (k). Users can specify the neighborhood style (see spdep::nb2listw) with default being standardized weight matrix (W).
 #'
-#' @param insert Spatial point, spatial polygon, or single raster layer object. Acceptable formats include \code{sf}, \code{SpatialPolygonsDataFrame}, \code{SpatialPointsDataFrame}, and \code{RasterLayer}.
+#' @param insert Spatial point or spatial polygon object. Acceptable formats include \code{sf}, \code{SpatialPolygonsDataFrame}, \code{SpatialPointsDataFrame}.
 #' @param variable Column name or numeric vector containing the variable from which the local G statistic will be calculated. Must possess a natural scale that orders small and large observations (i.e. number, percentage, ratio and not model residuals).
 #' @param style Style can take values \code{'W'}, \code{'B'}, \code{'C'}, \code{'U'}, \code{'mimax'}, \code{'S'} (see  \code{\link[spdep]{nb2listw}}). Character string.
 #' @param k Number of neighbors. Default is 9. Numeric.
@@ -16,46 +16,31 @@
 #' @importFrom RANN nn2
 #' @examples
 #' # Calculate Local G for sf point layer
-#'
-#' \dontrun{
 #' data(clea_deu2009_pt)
 #' out_1 <- hot_spot(insert=clea_deu2009_pt, variable = clea_deu2009_pt$to1)
 #' class(out_1)
 #' plot(out_1["LocalG"])
-#' }
 #'
 #' # Calculate Local G for sf polygon layer (variable as numeric vector)
-#'
-#' \dontrun{
 #' data(clea_deu2009)
 #' out_2 <- hot_spot(insert=clea_deu2009, variable = clea_deu2009$to1)
 #' summary(out_2$LocalG)
 #' plot(out_2["LocalG"])
-#' }
 #'
+#' \donttest{
 #' # Calculate Local G for sf polygon layer (variable as column name)
-#'
-#' \dontrun{
 #' out_3 <- hot_spot(insert=clea_deu2009, variable = "to1")
 #' summary(out_3$LocalG)
 #' plot(out_3["LocalG"])
 #' }
 #'
-#' # Calculate Local G for sf polygon SpatialPolygonsDataFrame (variable as column name)
-#'
-#' \dontrun{
+#' \donttest{
+#' # Calculate Local G for a SpatialPolygonsDataFrame object (variable as column name)
 #' out_4 <- hot_spot(insert=as(clea_deu2009,"Spatial"), variable = "to1")
 #' summary(out_4$LocalG)
 #' plot(out_4["LocalG"])
 #' }
 #'
-#' # Calculate Local G for RasterLayer
-#' \dontrun{
-#' data(gpw4_deu2010)
-#' out_5 <- hot_spot(insert=gpw4_deu2010)
-#' class(out_5)
-#' terra::plot(out_5$LocalG)
-#' }
 #' @export
 hot_spot <- function(insert,
                       variable = NULL,
@@ -89,16 +74,24 @@ hot_spot <- function(insert,
   if('sf'%in%class(insert)){
     if(all(sf::st_is(insert, 'POLYGON')) | all(sf::st_is(insert, 'MULTIPOLYGON'))){
       #Part A -
-      NNobj <- spdep::poly2nb(insert)
+      suppressMessages({suppressWarnings({
+        NNobj <- spdep::poly2nb(insert)
+      })})
 
       #Part B -
-      NNobj <- spdep::nb2listw(NNobj, style = style)
+      suppressMessages({suppressWarnings({
+        NNobj <- spdep::nb2listw(NNobj, style = style)
+      })})
 
       #Part C -
-      LocalG_Output <- spdep::localG(variable, NNobj)
+      suppressMessages({suppressWarnings({
+        LocalG_Output <- spdep::localG(variable, NNobj)
+      })})
 
       if(include_Moran%in%TRUE){
-        LocalM_Output <- spdep::localmoran(variable, NNobj)[,1]
+        suppressMessages({suppressWarnings({
+          LocalM_Output <- spdep::localmoran(variable, NNobj)[,1]
+        })})
       }
 
       #Part D -
@@ -187,13 +180,19 @@ hot_spot <- function(insert,
     class(KNN) <- 'nb'
 
     #Part D -
-    NNobj <- spdep::nb2listw(KNN, style = style)
+    suppressMessages({suppressWarnings({
+      NNobj <- spdep::nb2listw(KNN, style = style)
+    })})
 
     #Part E -
-    LocalG_Output <- spdep::localG(variable, NNobj)
+    suppressMessages({suppressWarnings({
+      LocalG_Output <- spdep::localG(variable, NNobj)
+    })})
 
     if(include_Moran%in%TRUE){
-      LocalM_Output <- spdep::localmoran(variable, NNobj)[,1]
+      suppressMessages({suppressWarnings({
+        LocalM_Output <- spdep::localmoran(variable, NNobj)[,1]
+      })})
     }
   }
 

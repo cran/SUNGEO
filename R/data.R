@@ -91,7 +91,7 @@
 #' name        : gpw_v4_population_count_rev11_2010_2pt5_min
 #' min value   :                                        0.00
 #' max value   :                                    92915.66
-#' @source Gridded Population of the World (GPW) v4: Population Count, v4.11 <doi:10.7927/H4JW8BX5>.
+#' @source Gridded Population of the World (GPW) v4: Population Count, v4.11 \doi{10.7927/H4JW8BX5}.
 "gpw4_deu2010"
 
 #' Hexagonal grid for Germany.
@@ -129,7 +129,7 @@
 #'   \item{ISO }{ISO 3166-1 alpha-3 country code. Character string.}
 #'   \item{ISOCOUNTRY }{Country name. Character string.}
 #' }
-#' @source Defense Mapping Agency (DMA), 1992. Digital Chart of the World. Defense Mapping Agency, Fairfax, Virginia. (Four CD-ROMs). Available through DIVA-GIS: \url{http://www.diva-gis.org/gData} (accessed August 12, 2021).
+#' @source Defense Mapping Agency (DMA), 1992. Digital Chart of the World. Defense Mapping Agency, Fairfax, Virginia. (Four CD-ROMs). Available through DIVA-GIS: \url{https://diva-gis.org/data.html} (accessed May 19, 2026).
 "highways_deu1992"
 
 #' Data availability through SUNGEO API

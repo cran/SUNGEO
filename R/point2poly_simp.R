@@ -18,26 +18,22 @@
 #' @importFrom purrr reduce
 #' @examples
 #' # Assignment of a single variable (sums)
-#' \dontrun{
 #' data(hex_05_deu)
 #' data(clea_deu2009_pt)
 #' out_1 <- point2poly_simp(pointz=clea_deu2009_pt,
 #'                          polyz=hex_05_deu,
 #'                          varz="vv1")
 #' plot(out_1["vv1"])
-#' }
 #'
 #' # Replace NA's with 0's
-#' \dontrun{
 #' out_2 <- point2poly_simp(pointz = clea_deu2009_pt,
 #'                          polyz = hex_05_deu,
 #'                          varz = "vv1",
 #'                          na_val = 0)
 #' plot(out_2["vv1"])
-#' }
 #'
+#' \donttest{
 #' # Multiple variables, with different assignment functions
-#' \dontrun{
 #' out_3 <- point2poly_simp(pointz = clea_deu2009_pt,
 #'                          polyz = hex_05_deu,
 #'                          varz = list(
@@ -49,7 +45,9 @@
 #'                            function(x){sum(x,na.rm=TRUE)},
 #'                            function(x){paste0(unique(na.omit(x)),collapse=" | ") }),
 #'                          na_val = list(NA_real_,0,NA_character_))
+#' plot(out_3["pvs1_margin"])
 #' }
+#'
 #' @export
 #'
 
@@ -189,9 +187,9 @@ point2poly_simp <- function(pointz,
   })
 
   #Part iv -
-  Empty_Sets <- sapply(Aggregation_Matrix, function(x) is.null(x) || grepl('Error', x))
-  if(TRUE%in%Empty_Sets){
-      Aggregation_Matrix <- Aggregation_Matrix[Empty_Sets == FALSE]
+  Empty_Sets <- sapply(Aggregation_Matrix, function(x) is.null(x) || !inherits(x, "data.table") || nrow(x) == 0)
+  if(TRUE %in% Empty_Sets){
+    Aggregation_Matrix <- Aggregation_Matrix[Empty_Sets == FALSE]
   }
 
   #Part v -

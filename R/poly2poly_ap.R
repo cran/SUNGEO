@@ -42,7 +42,6 @@
 #' @importFrom purrr reduce
 #' @examples
 #' # Interpolation of a single variable, with area weights
-#' \dontrun{
 #' data(clea_deu2009)
 #' data(hex_05_deu)
 #' out_1 <- poly2poly_ap(poly_from = clea_deu2009,
@@ -50,10 +49,10 @@
 #'               poly_to_id = "HEX_ID",
 #'               varz = "to1"
 #'              )
-#' }
+#' plot(out_1["to1_aw"])
 #'
+#' \donttest{
 #' # Interpolation of multiple variables, with area weights
-#' \dontrun{
 #' out_2 <- poly2poly_ap(
 #'               poly_from = clea_deu2009,
 #'               poly_to = hex_05_deu,
@@ -67,27 +66,31 @@
 #'                 function(x,w){sum(x*w)} ),
 #'               char_varz = c("incumb_pty_n","win1_pty_n")
 #'              )
+#' plot(out_2["vv1_aw"])
 #' }
 #'
+#'\donttest{
 #' # Interpolation of a single variable, with population weights
-#' \dontrun{
 #' data(gpw4_deu2010)
+#' gpw4_deu2010 <- terra::rast(gpw4_deu2010) # unwrap PackedSpatRaster
 #' out_3 <- poly2poly_ap(poly_from = clea_deu2009,
 #'                          poly_to = hex_05_deu,
 #'                          poly_to_id = "HEX_ID",
 #'                          varz = "to1",
 #'                          methodz = "pw",
 #'                          pop_raster = gpw4_deu2010)
+#' plot(out_3["to1_pw"])
 #' }
 #'
+#' \donttest{
 #' # Interpolation of a single variable, with area and population weights
-#' \dontrun{
 #' out_4 <- poly2poly_ap(poly_from = clea_deu2009,
 #'                          poly_to = hex_05_deu,
 #'                          poly_to_id = "HEX_ID",
 #'                          varz = "to1",
 #'                          methodz = c("aw","pw"),
 #'                          pop_raster = gpw4_deu2010)
+#' plot(out_4["to1_aw"])
 #' }
 #' @export
 
@@ -155,8 +158,8 @@ poly2poly_ap <- function(
   # Population-weights (part 1)
   if("pw"%in%methodz){
     # Calculate polygon total
-    poly_from$POP_TOTAL_FROM <- unlist(terra::extract(pop_raster,methods::as(poly_from,"Spatial"),fun=sum,na.rm=TRUE))
-    poly_to$POP_TOTAL_TO <- unlist(terra::extract(pop_raster,methods::as(poly_to,"Spatial"),fun=sum,na.rm=TRUE))
+    poly_from$POP_TOTAL_FROM <- terra::extract(pop_raster, terra::vect(poly_from), fun=sum, na.rm=TRUE)[,2]
+    poly_to$POP_TOTAL_TO     <- terra::extract(pop_raster, terra::vect(poly_to),   fun=sum, na.rm=TRUE)[,2]
   }
 
   #
@@ -198,7 +201,7 @@ poly2poly_ap <- function(
   # Population-weights (part 2)
   if("pw"%in%methodz){
     # Calculate weights
-    int_1$POP_INT <- unlist(terra::extract(pop_raster,int_1,fun=sum,na.rm=TRUE))
+    int_1$POP_INT <- terra::extract(pop_raster, terra::vect(int_1), fun=sum, na.rm=TRUE)[,2]
     int_1$POP_W_EXV <- int_1$POP_INT/int_1$POP_TOTAL_FROM
     int_1$POP_W_INV <- int_1$POP_INT/int_1$POP_TOTAL_TO
   }
@@ -477,7 +480,7 @@ poly2poly_ap <- function(
     })
 
     #Part iiii -
-    Empty_Sets <- sapply(Character_Aggregation_Matrix, function(x) is.null(x[,2]) || grepl('Error', x[,2]))
+    Empty_Sets <- sapply(Character_Aggregation_Matrix, function(x) is.null(x) || !inherits(x, "data.table") || nrow(x) == 0)
     if(TRUE%in%Empty_Sets){
       Character_Aggregation_Matrix <- Character_Aggregation_Matrix[Empty_Sets == FALSE]
     }
@@ -530,9 +533,7 @@ poly2poly_ap <- function(
     IntermediateFunction <- Numeric_Subset$Funz[sub_iter][[1]]
 
     #Part d -
-    searchWeight <- c('weighted', 'w')
-
-    if(grepl(paste(searchWeight, collapse = '|'), paste(as.character(attributes(IntermediateFunction)$srcref),collapse=""))){
+    if("w" %in% names(formals(IntermediateFunction))){
       if("aw"%in%Numeric_Subset$methodz[sub_iter]){
         Output <- by(data=Internal_Matrix,INDICES=Internal_Matrix$Return_ID,FUN=function(x){IntermediateFunction(x$var_, w = x$AREA_W_INV)},simplify=TRUE)
         Output <- data.table::data.table(Return_ID=as.numeric(names(Output)),V1=c(Output))
@@ -548,7 +549,6 @@ poly2poly_ap <- function(
         Output <- by(data=Internal_Matrix,INDICES=Internal_Matrix$Return_ID,FUN=function(x){IntermediateFunction(x$var_)},simplify=TRUE)
         Output <- data.table::data.table(Return_ID=as.numeric(names(Output)),V1=c(Output))
       })
-
     }
 
     #Part e -
@@ -565,7 +565,7 @@ poly2poly_ap <- function(
   })
 
   #Part iii -
-  Empty_Sets <- sapply(Numeric_Aggregation_Matrix, function(x){is.null(x[,2]) || grepl('Error', x[,2])})
+  Empty_Sets <- sapply(Numeric_Aggregation_Matrix, function(x){is.null(x) || !inherits(x, "data.table") || nrow(x) == 0})
 
   if(TRUE%in%Empty_Sets){
     Numeric_Aggregation_Matrix <- Numeric_Aggregation_Matrix[Empty_Sets == FALSE]
@@ -598,7 +598,7 @@ poly2poly_ap <- function(
 
       #Part ii -
       Extensive_Aggregation_Matrix <- lapply(1:nrow(Extensive_Subset), function(sub_iter){
-      
+
         #Part a - Locate Variables
         if("aw"%in%Extensive_Subset$methodz[sub_iter]){
           locVar <- which(names(Aggregation_Matrix)%in%c('Return_ID', 'AREA_W_EXV', Extensive_Subset$Varz[sub_iter]))
@@ -645,7 +645,7 @@ poly2poly_ap <- function(
       })
 
       #Part iii -
-      Empty_Sets <- sapply(Extensive_Aggregation_Matrix, function(x){is.null(x[,2]) || grepl('Error', x[,2])})
+      Empty_Sets <- sapply(Extensive_Aggregation_Matrix, function(x){is.null(x) || !inherits(x, "data.table") || nrow(x) == 0})
 
       if(TRUE%in%Empty_Sets){
         Extensive_Aggregation_Matrix <- Extensive_Aggregation_Matrix[Empty_Sets == FALSE]
